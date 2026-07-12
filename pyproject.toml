@@ -1,0 +1,39 @@
+# 変数の詳細は<>の中に記述する。
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pgvm"
+version = "0.1.0"
+authors = [
+  { name="masaniki", email="masaniki.software@gmail.com" },
+]
+description = "PGVM is an abbreviation for Pointer Graph Virtual Machine." 
+dependencies = [
+  "PyYAML",
+  "graphviz"
+]
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+  "Development Status :: 1 - Planning",
+  "Programming Language :: Python :: 3.9",
+  "Operating System :: OS Independent",
+  "Natural Language :: Japanese",
+  "Natural Language :: English" ,
+  "Intended Audience :: Information Technology"
+]
+license = "MIT"
+license-files = ["LICENSE.txt"]
+keywords = [
+  "graph",
+  "node",
+  "edge",
+  "automaton",
+  "processor",
+]
+
+[project.urls]
+Repository = "https://github.com/masaniki/python-pgvm"
+Issues = "https://github.com/masaniki/python-pgvm/issues"

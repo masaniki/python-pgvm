@@ -1,0 +1,15 @@
+# cache.
+__pycache__/
+.pytest_cache/
+**/*.pyc
+
+# build and upload.
+dist/
+.pypirc
+*.egg-info
+
+# graphviz product
+*.gv
+*.pdf
+*.dot
+*.svg

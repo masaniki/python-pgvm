@@ -1,0 +1,61 @@
+"@Children":
+  Dockerfile:
+    "@Summ": dockerで開発環境を提供する。
+  LICENSE.txt:
+    "@Summ": license file本体。
+  README.md:
+    "@Summ": このprojectのgithubを訪れた人に見てほしいmessageを記述する。
+  docs:
+    "@Summ": projectのdocumentを格納するdirectory.
+    "@Children":
+      README_JP.md:
+        "@Summ": 日本語docuemntを記述する。
+      coding_rule.md:
+        "@Summ": coding規約を記述する。
+      for_developers_jp.md:
+        "@Summ": 開発者向けのmessageを記述する。
+  pyproject.toml:
+    "@Summ": projectをbuildするのに必要なfile.
+  requirements.txt:
+    "@Summ": Dockerfile上で開発環境を再現するために必要なfile.
+  sandbox.py:
+    "@Summ": pythonの挙動を確認するためのfile.
+  src:
+    "@Summ": sourcecodeを格納するためのdirectory。
+    "@Children":
+      template:
+        "@Summ": "package名を定義するdirectory。"
+        "@Desc":
+        - import文の後に記述するpackage名はここで決まる。
+        - ここの名前が重複するとpackageが機能しない場合がある。
+        "@Children":
+          __init__.py:
+            "@Summ": initするfile.
+          class01.py:
+            "@Summ": "__init__.pyに読み込むclassを定義するfile."
+  tests:
+    "@Children":
+      class01:
+        "@Summ": class01用の単体testを格納するdirectory.
+        "@Children":
+          sandbox:
+            "@Summ": sandbox用のfileを格納するdirectory.
+            "@Desc": 自動testが通らない場合に、ここにfileを置いて色々検証する。
+          unittest:
+            "@Summ": 単体test用のfileを格納するdirectory.
+            "@Children":
+              in:
+                "@Summ": 単体testの入力dataを格納するdirectory.
+              out:
+                "@Summ": 単体testの出力dataを格納するdirectory.
+              exp:
+                "@Summ": 単体testの期待出力dataを格納するdirectory.
+      sandbox.py:
+        "@Summ": debug用のpython file.
+        "@Desc": pytestが通らない時にここでdebugする。
+      test_main.py:
+        "@Summ": test用のpython file.
+        "@Desc":
+        - pytest commandで起動する。
+        - ここに配置するpytest fileは全ての単体testを網羅するものである。
+

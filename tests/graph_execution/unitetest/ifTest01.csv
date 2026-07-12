@@ -1,0 +1,6 @@
+cp,register,new,1
+cp,register/next,new,2
+cp,register/value,file/value,3
+if,file/value,register/value,4,5
+cp,register/next/next,new,100
+cp,file/value/next,new,100
