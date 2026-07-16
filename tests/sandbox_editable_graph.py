@@ -7,7 +7,7 @@ projectDir=Path(__file__).parent.parent
 packageDir=projectDir/"src"
 sys.path.append(str(packageDir))
 
-from edge_assembler import EditableGraph
+from pgvm import EditableGraph
 
 SANDBOX_DIR=Path(__file__).parent/"editable_graph"/"sandbox"
 
