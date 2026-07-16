@@ -108,14 +108,3 @@ IF文はBNF likeな表現で次の様に表される。
 - nodeの削除のsample program.
 
 
-## Next To Do
-
-- [ ] to do things.
-
-## Ideas
-
-次、実装する可能性があるideaを記述する。
-
-# Others
-
-

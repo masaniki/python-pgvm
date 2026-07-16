@@ -2,7 +2,7 @@
 
 開発者向けのmessageを記述する。
 
-## Deploy
+## Deployment
 
 ### build
 
@@ -43,3 +43,15 @@ masterへmergeする。
 developへmergeする。
 
 merge後は削除。
+
+## Next To Do
+
+- [ ] 引数を複数にできるようにする。
+
+## Ideas
+
+次、実装する可能性があるideaを記述する。
+
+- 未達度が大きいpathでも一気に生成できるようにする？
+
+# Others
