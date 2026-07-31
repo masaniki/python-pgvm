@@ -47,6 +47,9 @@ merge後は削除。
 ## Next To Do
 
 - [ ] 引数を複数にできるようにする。
+- [ ] new文の追加。
+- [ ] delete文の追加。
+- [ ] cp文をswitch文へと改名。
 
 ## Ideas
 
