@@ -145,6 +145,48 @@ class EditableGraph():
       unreached-=1
     return history,unreached
 
+
+  def execute(self):
+    """
+    @Summ: programを実行する関数。
+    """
+    self.programCounter=0
+    while(True):
+      if(self.programLength<=self.programCounter):
+        break
+      argList=self.program[self.programCounter]
+      command=argList[0]
+      arglen=len(argList)
+      match command:
+        case "switch":
+          if(arglen!=3):
+            raise RuntimeError(f"line: {self.programCounter}:\n\t the argument count is should be 3.")
+          self.switch(argList[1],argList[2])
+          self.programCounter=int(argList[3])
+        case "delete":
+          if(arglen!=2):
+            raise RuntimeError(f"line: {self.programCounter}:\n\t the argument count is should be 2.")
+          self.executeDeletion(argList[1])
+          self.programCounter=int(argList[2])
+        case "new":
+          if(len(argList)==2):
+            self.generateNodeEdge(argList[1])
+            self.programCounter=int(argList[2])
+          elif(len(argList)==3):
+            self.generateEdge(argList[1])
+            self.programCounter=int(argList[2])
+          else:
+            raise RuntimeError(f"line: {self.programCounter}:\n\t the argument count is should be 2 or 3.")
+        case "if":
+          if(arglen!=5):
+            raise RuntimeError(f"line: {self.programCounter}:\n\t the argument count is should be 5.")
+          isSame=self.executeIf(argList[1],argList[2])
+          if(isSame):
+            self.programCounter=int(argList[3])
+          else:
+            self.programCounter=int(argList[4])
+    return
+
   def executeDeletion(self,path:str):
     """
     @Summ: 到達可能なedgeを削除する関数。
@@ -211,7 +253,7 @@ class EditableGraph():
     newEndNode=path2history[-1]
     self.data[edgeStartNode][lastEdgeLabel]=newEndNode
 
-  def executeSwitch(self,path1,path2):
+  def switch(self,path1,path2):
     """
     @Summ: 既知のpathの終点を既知のnodeに切り替える関数。
 
@@ -242,27 +284,6 @@ class EditableGraph():
     if(newEndNode in edgeInfo.values()):
       raise RuntimeError(f"line: {self.programCounter}:\n\t Edge endpoint is duplicated.")    #既存のedgeの終端が被る。
     self.data[newStartNode][lastEdge]=newEndNode
-
-  def execute(self):
-    """
-    @Summ: programを実行する関数。
-    """
-    self.programCounter=0
-    while(True):
-      if(self.programLength<=self.programCounter):
-        break
-      argList=self.program[self.programCounter]
-      if(argList[0]=="cp"):
-        self.executeCopy(argList[1],argList[2])
-        self.programCounter=int(argList[3])
-        continue
-      elif(argList[0]=="if"):
-        isSame=self.executeIf(argList[1],argList[2])
-        if(isSame):
-          self.programCounter=int(argList[3])
-        else:
-          self.programCounter=int(argList[4])
-    return
 
   def executeIf(self,path1,path2):
     """
