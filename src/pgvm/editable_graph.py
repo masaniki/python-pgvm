@@ -158,25 +158,26 @@ class EditableGraph():
       command=argList[0]
       arglen=len(argList)
       match command:
-        case "switch":
+        case "se":
+          if(arglen!=4):
+            raise RuntimeError(f"line: {self.programCounter}:\n\t the argument count is should be 4.")
+          self.switchEdge(argList[1],argList[2])
+          self.programCounter=int(argList[3])
+        case "del":
           if(arglen!=3):
             raise RuntimeError(f"line: {self.programCounter}:\n\t the argument count is should be 3.")
-          self.switch(argList[1],argList[2])
-          self.programCounter=int(argList[3])
-        case "delete":
-          if(arglen!=2):
-            raise RuntimeError(f"line: {self.programCounter}:\n\t the argument count is should be 2.")
           self.executeDeletion(argList[1])
           self.programCounter=int(argList[2])
-        case "new":
-          if(len(argList)==2):
-            self.generateNodeEdge(argList[1])
-            self.programCounter=int(argList[2])
-          elif(len(argList)==3):
-            self.generateEdge(argList[1])
-            self.programCounter=int(argList[2])
-          else:
-            raise RuntimeError(f"line: {self.programCounter}:\n\t the argument count is should be 2 or 3.")
+        case "gn":
+          if(arglen!=3):
+            raise RuntimeError(f"line: {self.programCounter}:\n\t the argument count is should be 3.")
+          self.generateNode(argList[1])
+          self.programCounter=int(argList[2])
+        case "ge":
+          if(arglen!=4):
+            raise RuntimeError(f"line: {self.programCounter}:\n\t the argument count is should be 4.")
+          self.generateEdge(argList[1],argList[2])
+          self.programCounter=int(argList[3])
         case "if":
           if(arglen!=5):
             raise RuntimeError(f"line: {self.programCounter}:\n\t the argument count is should be 5.")
@@ -206,7 +207,7 @@ class EditableGraph():
     else:
       raise RuntimeError(f"line: {self.programCounter}:\n\t{path} is not accessable.")
 
-  def generateNodeEdge(self,path):
+  def generateNode(self,path):
     """
     @Summ: 未知のnodeへの新しいedgeを生成する関数。
 
@@ -253,7 +254,7 @@ class EditableGraph():
     newEndNode=path2history[-1]
     self.data[edgeStartNode][lastEdgeLabel]=newEndNode
 
-  def switch(self,path1,path2):
+  def switchEdge(self,path1,path2):
     """
     @Summ: 既知のpathの終点を既知のnodeに切り替える関数。
 
