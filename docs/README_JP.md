@@ -45,15 +45,15 @@ PGLの各引数は、`,`で区切られており、CSV(Comma Separated Value)の
 
 PGLの最初の引数はkeywordとなっており、そのkeywordによって命令を判断します。これをコマンドと呼びます。
 
-コマンドは、`new`, `delete`, `switch`, `if`の4つです。
+命令は、 generate node(GN), generate edge(GE), switch edge(SE), delete(DEL), ifの5つです。
 
 以下は、コマンドの使い分けの早見表です。
 
-| コマンド名 | edgeが存在 | 終点のnodeが存在 |
-| ---       | ---        | ---             |
-| switch    | o          | o               |
-| new1      | x          | o               |
-| new2      | x          | x               |
+| コマンド名     | edgeが存在 | 終点のnodeが存在 |
+| ---           | ---        | ---             |
+| generate node | x          | x               |
+| generate edge | x          | o               |
+| switch edge   | o          | o               |
 
 
 ## 参照について
@@ -68,13 +68,43 @@ pointer graph内でのnode間の移動は、`edge_label`を使って行われま
 
 `<path> ::= <edge_label>(/<edge_label>)*`
 
-## switch文
+## generate node
 
-switch文は、既知のpathの終点を既知のnodeへ切り替える関数です。
+generate nodeは、未知のnodeへの新しいedgeを生成します。形式表現は以下の通りです。
 
-switch文の形式表現は以下の通りです。
+`gn, <path1>, <row_index>`
 
-`switch, <path1>, <path2>, <row_index>`
+- `<path1>`
+  
+  新しく生成するnodeへのpathを指定する。
+
+- `<row_index>`
+  
+  命令を実行した後のjump先の行番号を記述します。
+
+## generate edge
+
+generate edgeは、未知のnodeへの新しいedgeを生成します。形式表現は以下の通りです。
+
+`ge, <path1>, <path2>, <row_index>`
+
+- `<path1>`
+  
+  新しく生成するpathを指定する。
+
+- `<path2>`
+  
+  edgeの新しい終点を指定する。既知のnodeを指定する。
+
+- `<row_index>`
+  
+  命令を実行した後のjump先の行番号を記述します。
+
+## switch edge
+
+switch edgeは、既知のpathの終点を既知のnodeへ切り替える関数です。形式表現は以下の通りです。
+
+`se, <path1>, <path2>, <row_index>`
 
 - `<path1>`
   
@@ -88,27 +118,11 @@ switch文の形式表現は以下の通りです。
   
   命令を実行した後のjump先の行番号を記述します。
 
-## new文
-
-new文は、未知のnodeへの新しいedgeを生成します。
-
-new文の形式表現は以下の通りです。
-
-`new, <path1>, <row_index>`
-
-- `<path1>`
-  
-  新規生成するpathを指定します。
-
-- `<row_index>`
-  
-  命令を実行した後のjump先の行番号を記述します。
-
-## delete文
+## delete
 
 delete文は、edgeを削除する命令です。形式表現は以下の通りです。
 
-`delete, <path1>, <row_index>`
+`del, <path1>, <row_index>`
 
 - `<path1>`
 
@@ -118,11 +132,9 @@ delete文は、edgeを削除する命令です。形式表現は以下の通り�
 
   命令を実行した後のjump先の行番号を記述します。
 
-## if文
+## if
 
-if文は、2つのnodeを比較して、その結果に応じて次の命令の変更するための文です。
-
-if文の形式表現は以下の通りです。
+if文は、2つのnodeを比較して、その結果に応じて次の命令の変更するための文です。形式表現は以下の通りです。
 
 `if, <path1>, <path2>, <row_index1>, <row_index2>`
 
