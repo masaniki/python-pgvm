@@ -53,5 +53,7 @@ merge後は削除。
 次、実装する可能性があるideaを記述する。
 
 - 未達度が大きいpathでも一気に生成できるようにする？
+- PGRuntimeErrorの追加。
+- Turing machineとの比較。
 
 # Others
