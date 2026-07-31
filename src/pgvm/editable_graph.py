@@ -145,7 +145,7 @@ class EditableGraph():
       unreached-=1
     return history,unreached
 
-  def delete(self,path:str):
+  def executeDeletion(self,path:str):
     """
     @Summ: 到達可能なedgeを削除する関数。
 
@@ -187,21 +187,31 @@ class EditableGraph():
     """
     @Summ: 既知のnodeへの新しいedgeを生成する関数。
 
-    @Desc: する。
-
     @Args:
       path1:
-        @Summ: copy文の第一引数。編集するpathを表す。
+        @Summ: 終点を動かすpathを指定する。
+        @Desc: 未知のpathしか受け付けない。
         @Type: Str
       path2:
-        @Summ: copy文の第二引数。上書きするpathを表す。
+        @Summ: edgeの新しい終着点を指定する。
+        @Desc: 既知のpathしか受け付けない。
         @Type: Str
     """
     path1EdgeList=path1.split(self.PATH_DELIMITER)
     path2EdgeList=path2.split(self.PATH_DELIMITER)
-    self.changeEdgeDestination(path1EdgeList,path2EdgeList)
+    # self.changeEdgeDestination(path1EdgeList,path2EdgeList)
+    path1history,unused1=self.accessNode(path1EdgeList)
+    lastEdgeLabel=path1EdgeList[-1]
+    if(unused1!=1):
+      raise RuntimeError(f"line: {self.programCounter}:\n\t{path1} is not accessable.")
+    edgeStartNode=path1history[-1]
+    path2history,unused2=self.accessNode(path2EdgeList)
+    if(unused2>0):
+      raise RuntimeError(f"line: {self.programCounter}:\n\t{path2} is not accessable.")
+    newEndNode=path2history[-1]
+    self.data[edgeStartNode][lastEdgeLabel]=newEndNode
 
-  def switch(self,path1,path2):
+  def executeSwitch(self,path1,path2):
     """
     @Summ: 既知のpathの終点を既知のnodeに切り替える関数。
 
@@ -233,45 +243,6 @@ class EditableGraph():
       raise RuntimeError(f"line: {self.programCounter}:\n\t Edge endpoint is duplicated.")    #既存のedgeの終端が被る。
     self.data[newStartNode][lastEdge]=newEndNode
 
-  def changeEdgeDestination(self,oldPath,newPath):
-    """
-    @Summ: edgeの終点を変更する関数。
-
-    @Desc:
-    - nodeの生成を伴わないedgeの生成まではできる。
-    - 始点と終点が同じ辺(二重辺)は禁止。
-
-    @Args:
-      oldPath:
-        @Summ: 現在のedgeの終着点。
-        @Desc:
-        - 未到達度0の時は、既存のedgeの終点を付け替える作業。
-        - 未到達度1の時は、新しいedgeLabelを生成する。
-        - それ以上の未到達度は受け付けない。
-        @SemType: Str型List.
-      newPath:
-        @Summ: edgeの新しい終着点を指定する。
-        @Desc: 未到達度0のpathしか受け付けない。
-        @SemType: Str型List.
-    """
-    oldDestHistory,oldUnused=self.accessNode(oldPath)
-    lastEdgeLabel=oldPath[-1]
-    if(oldUnused==0):
-      edgeStartNode=oldDestHistory[-2]
-    elif(oldUnused==1):
-      edgeStartNode=oldDestHistory[-1]
-    else:
-      raise RuntimeError(f"line: {self.programCounter}:\n\t{oldPath} is not accessable.")
-    newDestHistory,newUnused=self.accessNode(newPath)
-    if(newUnused>0):
-      raise RuntimeError(f"line: {self.programCounter}:\n\t{newPath} is not accessable.")
-    newEndNode=newDestHistory[-1]
-    edgeInfo=self.data[edgeStartNode]
-    if(newEndNode in edgeInfo.values()):
-      raise RuntimeError(f"line: {self.programCounter}:\n\t Edge endpoint is duplicated.")    #既存のedgeの終端が被る。
-    self.data[edgeStartNode][lastEdgeLabel]=newEndNode
-
-
   def execute(self):
     """
     @Summ: programを実行する関数。
@@ -292,21 +263,6 @@ class EditableGraph():
         else:
           self.programCounter=int(argList[4])
     return
-
-  def executeNewArg2(self,path1,path2):
-    """
-    @Summ: 引数2つのnew文を実行する関数。
-
-    @Args:
-      path1:
-        @Summ: new文の第一引数。新規生成するpathを表す。
-        @Type: Str
-      path2:
-        @Summ: new文の第二引数。新しいedgeの終端nodeを示すpath。
-        @Type: Str
-    """
-    path1EdgeList=path1.split(self.PATH_DELIMITER)
-    self.generateEdge(path1EdgeList)
 
   def executeIf(self,path1,path2):
     """
