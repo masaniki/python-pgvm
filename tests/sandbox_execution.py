@@ -10,8 +10,8 @@ sys.path.append(str(packageDir))
 from pgvm import EditableGraph
 
 if(__name__=="__main__"):
-  graphFile=Path(__file__).parent/"class01"/"sandbox02"/"test01.yaml"
-  programFile=Path(__file__).parent/"class01"/"sandbox02"/"ifTest03.csv"
+  graphFile=Path(__file__).parent/"graph_execution"/"unittest"/"graph01.yaml"
+  programFile=Path(__file__).parent/"graph_execution"/"unittest"/"ifTest02.csv"
   with open(graphFile,mode="r",encoding="utf-8") as f:
     graphDict=yaml.safe_load(f)
   eg01=EditableGraph(graphDict,10)

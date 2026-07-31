@@ -151,7 +151,9 @@ class EditableGraph():
     @Summ: programを実行する関数。
     """
     self.programCounter=0
+    print(self.programCounter)
     while(True):
+      print(self.programCounter)
       if(self.programLength<=self.programCounter):
         break
       argList=self.program[self.programCounter]
@@ -186,6 +188,8 @@ class EditableGraph():
             self.programCounter=int(argList[3])
           else:
             self.programCounter=int(argList[4])
+        case _:
+          raise RuntimeError(f"line: {self.programCounter}:\n\t unknown command.")
     return
 
   def executeDeletion(self,path:str):

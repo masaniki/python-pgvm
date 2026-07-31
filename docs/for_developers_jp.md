@@ -46,15 +46,12 @@ merge後は削除。
 
 ## Next To Do
 
-- [ ] 引数を複数にできるようにする。
-- [ ] new文の追加。
-- [ ] delete文の追加。
-- [ ] cp文をswitch文へと改名。
 
 ## Ideas
 
 次、実装する可能性があるideaを記述する。
 
+- 引数を複数にできるようにする。
 - 未達度が大きいpathでも一気に生成できるようにする？
 - PGRuntimeErrorの追加。
 - Turing machineとの比較。
