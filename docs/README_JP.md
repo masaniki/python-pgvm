@@ -39,9 +39,22 @@ binaryのcomputerが、数値や文字をbit列に変換するように、Pointe
 
 PGLは、pointer grpahを操作するための形式言語です。
 
-PGLはCSV(Comma Separated Value)の形で記述されます。
+PGLは1行ずつ実行されるscript言語です。
 
-PGLは2つの構文しか持ちません。それはCOPY文とIF文です。
+PGLの各引数は、`,`で区切られており、CSV(Comma Separated Value)のような形で表現されます。
+
+PGLの最初の引数はkeywordとなっており、そのkeywordによって命令を判断します。これをコマンドと呼びます。
+
+コマンドは、`new`, `delete`, `switch`, `if`の4つです。
+
+以下は、コマンドの使い分けの早見表です。
+
+| コマンド名 | edgeが存在 | 終点のnodeが存在 |
+| ---       | ---        | ---             |
+| switch    | o          | o               |
+| new1      | x          | o               |
+| new2      | x          | x               |
+
 
 ## 参照について
 
@@ -55,47 +68,83 @@ pointer graph内でのnode間の移動は、`edge_label`を使って行われま
 
 `<path> ::= <edge_label>(/<edge_label>)*`
 
-## COPY文
+## switch文
 
-COPY文は、edgeを動かすための文です。
+switch文は、既知のpathの終点を既知のnodeへ切り替える関数です。
 
-COPY文はBNF likeな表現で次の様に表されます。
+switch文の形式表現は以下の通りです。
 
-`cp, <path1>, <path2>, <row_index>`
+`switch, <path1>, <path2>, <row_index>`
 
-`<path1>`には、編集するedgeもしくは、新しく生成するedgeを指定するためのpathを指定します。
-
-`<path2>`には、edgeを編集した後の状態を指定するためのpathを指定します。
-
-- 特殊なpath `delete`
+- `<path1>`
   
-  `<path1>=既知のedge`　かつ　`<path2>=delete`　の時、`<path1>`の末尾のedgeを削除します。
+  編集するedgeもしくは、新しく生成するedgeを指定するためのpathを指定します。
 
-- 特殊なpath `new`
+- `<path2>`
+
+  edgeを編集した後の状態を指定するためのpathを指定します。
+
+- `<row_index>`
   
-  `<path1>=未知のedge`　かつ　`<path2>=new`　の時、`<path1>`の位置に新しいnodeを生成します。
+  命令を実行した後のjump先の行番号を記述します。
 
-`<row_index>`には、COPY文を実行した後のjump先の行番号を記述します。
+## new文
 
-## IF文
+new文は、未知のnodeへの新しいedgeを生成します。
 
-IF文は、2つのnodeを比較して、その結果に応じて次の命令の変更するための文です。
+new文の形式表現は以下の通りです。
 
-IF文はBNF likeな表現で次の様に表される。
+`new, <path1>, <row_index>`
+
+- `<path1>`
+  
+  新規生成するpathを指定します。
+
+- `<row_index>`
+  
+  命令を実行した後のjump先の行番号を記述します。
+
+## delete文
+
+delete文は、edgeを削除する命令です。形式表現は以下の通りです。
+
+`delete, <path1>, <row_index>`
+
+- `<path1>`
+
+  削除するedgeを指定する。
+
+- `<row_index>`
+
+  命令を実行した後のjump先の行番号を記述します。
+
+## if文
+
+if文は、2つのnodeを比較して、その結果に応じて次の命令の変更するための文です。
+
+if文の形式表現は以下の通りです。
 
 `if, <path1>, <path2>, <row_index1>, <row_index2>`
 
-`<path1>`には、比較するnodeを指定するためのpathを記述します。
+- `<path1>`
 
-`<path2>`には、比較するnodeを指定するためのpathを記述します。
+  比較するnodeを指定するためのpathを記述します。
 
-- 特殊なpath `delete`
+- `<path2>`
+
+  比較するnodeを指定するためのpathを記述します。
+
+  - 特殊なpath `delete`
   
-  `<path2>`に`delete`を指定すると、`<path1>`が存在しない時に`<row_index1>`へjumpし(trueと同じ挙動)、存在する時に`<row_index2>`へjumpします。
+    `<path2>`に`delete`を指定すると、`<path1>`が存在しない時に`<row_index1>`へjumpし(trueと同じ挙動)、存在する時に`<row_index2>`へjumpします。
 
-`<row_index1>`には、`<path1>`と`<path2>`の比較結果がtrueだった場合のjump先の行番号を記述します。
+- `<row_index1>`
 
-`<row_index2>`には、`<path1>`と`<path2>`の比較結果がfalseだった場合のjump先の行番号を記述します。
+  `<path1>`と`<path2>`の比較結果がtrueだった場合のjump先の行番号を記述します。
+
+- `<row_index2>`
+
+  `<path1>`と`<path2>`の比較結果がfalseだった場合のjump先の行番号を記述します。
 
 ## 例
 
