@@ -44,6 +44,14 @@ developへmergeする。
 
 merge後は削除。
 
+## deployment process
+
+- feat/* branchで開発。
+- 単体test合格。
+- feat/*をdevelopにmerge.
+- PyPIへupload.
+- developをmasterにmerge.
+
 ## 前回からの変更点
 
 - [x] generate node文の追加。
