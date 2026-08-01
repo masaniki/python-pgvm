@@ -54,6 +54,7 @@ merge後は削除。
 - [x] root nodeはimport時に指定する。
 - [x] new記号やdelete記号の削除。
 - [x] test caseの追加。
+- [x] PGVMRuntimeErrorの追加。
 
 ## Ideas
 
@@ -62,7 +63,6 @@ merge後は削除。
 - 引数を複数にできるようにする。
 - rootに複数のfileを接続する。
 - 未達度が大きいpathでも一気に生成できるようにする？
-- PGRuntimeErrorの追加。
 - Turing machineとの比較。
 
 # Others

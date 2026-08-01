@@ -1,4 +1,7 @@
+
 import graphviz
+
+from .error import PGVMRuntimeError, PGVMInvalidPath, PGVMSyntaxError
 
 class EditableGraph():
   """
@@ -116,7 +119,7 @@ class EditableGraph():
           else:
             digraph.edge(tail_name=f"row_{i}:jump2",head_name="end")
         case _:
-          raise RuntimeError
+          raise PGVMSyntaxError(self.programCounter, f"{command} is invalid command.")
       digraph.node(name=f"row_{i}",label=nodeLabel, shape="record")
     digraph.render()
 
@@ -198,34 +201,34 @@ class EditableGraph():
       match command:
         case "se":
           if(arglen!=4):
-            raise RuntimeError(f"line: {self.programCounter}:\n\t the argument count is should be 4.")
+            raise PGVMSyntaxError(self.programCounter, "the argument count is should be 4.")
           self.switchEdge(argList[1],argList[2])
           self.programCounter=int(argList[3])
         case "del":
           if(arglen!=3):
-            raise RuntimeError(f"line: {self.programCounter}:\n\t the argument count is should be 3.")
+            raise PGVMSyntaxError(self.programCounter, "the argument count is should be 3.")
           self.executeDeletion(argList[1])
           self.programCounter=int(argList[2])
         case "gn":
           if(arglen!=3):
-            raise RuntimeError(f"line: {self.programCounter}:\n\t the argument count is should be 3.")
+            raise PGVMSyntaxError(self.programCounter, "the argument count is should be 3.")
           self.generateNode(argList[1])
           self.programCounter=int(argList[2])
         case "ge":
           if(arglen!=4):
-            raise RuntimeError(f"line: {self.programCounter}:\n\t the argument count is should be 4.")
+            raise PGVMSyntaxError(self.programCounter, "the argument count is should be 4.")
           self.generateEdge(argList[1],argList[2])
           self.programCounter=int(argList[3])
         case "if":
           if(arglen!=5):
-            raise RuntimeError(f"line: {self.programCounter}:\n\t the argument count is should be 5.")
+            raise PGVMSyntaxError(self.programCounter, "the argument count is should be 5.")
           isSame=self.executeIf(argList[1],argList[2])
           if(isSame):
             self.programCounter=int(argList[3])
           else:
             self.programCounter=int(argList[4])
         case _:
-          raise RuntimeError(f"line: {self.programCounter}:\n\t unknown command.")
+          raise PGVMSyntaxError(self.programCounter, "unknown command.")
     return
 
   def executeDeletion(self,path:str):
@@ -245,7 +248,7 @@ class EditableGraph():
       lastNode=history[-1]
       del self.graph[lastNode][lastEdge]
     else:
-      raise RuntimeError(f"line: {self.programCounter}:\n\t{path} is not accessable.")
+      raise PGVMInvalidPath(self.programCounter, path)
 
   def generateNode(self,path):
     """
@@ -260,7 +263,7 @@ class EditableGraph():
     edgeList=path.split(self.PATH_DELIMITER)
     history,unreached=self.accessNode(edgeList)
     if(unreached!=1):
-      raise RuntimeError(f"line: {self.programCounter}:\n\t{path} is not accessable.")
+      raise PGVMInvalidPath(self.programCounter, path)
     lastEdge=edgeList[-1]
     lastNode=history[-1]
     newNode=self.__issueNewNode()
@@ -286,11 +289,11 @@ class EditableGraph():
     path1history,unused1=self.accessNode(path1EdgeList)
     lastEdgeLabel=path1EdgeList[-1]
     if(unused1!=1):
-      raise RuntimeError(f"line: {self.programCounter}:\n\t{path1} is not accessable.")
+      raise PGVMInvalidPath(self.programCounter, path1)
     edgeStartNode=path1history[-1]
     path2history,unused2=self.accessNode(path2EdgeList)
     if(unused2>0):
-      raise RuntimeError(f"line: {self.programCounter}:\n\t{path2} is not accessable.")
+      raise PGVMInvalidPath(self.programCounter, path2)
     newEndNode=path2history[-1]
     self.graph[edgeStartNode][lastEdgeLabel]=newEndNode
 
@@ -315,15 +318,15 @@ class EditableGraph():
     path1history,unused1=self.accessNode(path1EdgeList)
     lastEdge=path1EdgeList[-1]
     if(unused1>0):
-      raise RuntimeError(f"line: {self.programCounter}:\n\t{path1} is not accessable.")
+      raise PGVMInvalidPath(self.programCounter, path1)
     newStartNode=path1history[-2]
     path2history,unreached2=self.accessNode(path2EdgeList)
     if(unreached2>0):
-      raise RuntimeError(f"line: {self.programCounter}:\n\t{path2} is not accessable.")
+      raise PGVMInvalidPath(self.programCounter, path2)
     newEndNode=path2history[-1]
     edgeInfo=self.graph[newStartNode]
     if(newEndNode in edgeInfo.values()):
-      raise RuntimeError(f"line: {self.programCounter}:\n\t Edge endpoint is duplicated.")    #既存のedgeの終端が被る。
+      raise PGVMRuntimeError(self.programCounter, "Edge endpoint is duplicated.")    #既存のedgeの終端が被る。
     self.graph[newStartNode][lastEdge]=newEndNode
 
   def executeIf(self,path1,path2):
@@ -346,9 +349,9 @@ class EditableGraph():
     path2EdgeList=path2.split(self.PATH_DELIMITER)
     path2History,path2unreached=self.accessNode(path2EdgeList)
     if(path1unreached!=0):
-      raise RuntimeError(f"line {self.programCounter}:\n\t{path1} is not accessable.")
+      raise PGVMInvalidPath(self.programCounter, path1)
     if(path2unreached!=0):
-      raise RuntimeError(f"line {self.programCounter}:\n\t{path2} is not accessable.")
+      raise PGVMInvalidPath(self.programCounter, path2)
     path1LastNode=path1History[-1]
     path2LastNode=path2History[-1]
     if(path1LastNode==path2LastNode):
