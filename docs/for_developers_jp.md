@@ -44,8 +44,16 @@ developへmergeする。
 
 merge後は削除。
 
-## Next To Do
+## 前回からの変更点
 
+- [x] generate node文の追加。
+- [x] generate edge文の追加。
+- [x] switch edge文の追加。
+- [x] delete文の追加。
+- [x] test caseの追加。
+- [x] programの可視化用の関数の追加。
+- [ ] root nodeはimport時に指定する。
+- [ ] new記号やdelete記号の削除。
 
 ## Ideas
 
@@ -53,7 +61,6 @@ merge後は削除。
 
 - 引数を複数にできるようにする。
 - rootに複数のfileを接続する。
-- deleteやnewの削除。
 - 未達度が大きいpathでも一気に生成できるようにする？
 - PGRuntimeErrorの追加。
 - Turing machineとの比較。
