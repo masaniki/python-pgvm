@@ -97,17 +97,14 @@ def testCaseExecution(caseDir:Path,outputName:str="output.yaml",expectedName:str
     expectedFile=caseDir/expectedName
     with open(expectedFile,mode="r",encoding="utf-8") as f:
       expDict=yaml.safe_load(f)
-    for key,outValue in eg01.graph.items():
-      expValue=expDict.get(key)
-      if(expValue is None):
-        return False
-      if(outValue!=expValue):
-        return False
-    return True
+    # 2つのdict型を比較する。
+    return expDict==eg01.graph
 
 if(__name__=="__main__"):
   suitDir=Path(__file__).parent/"graph_execution"
-  caseDir=Path(__file__).parent/"graph_execution"/"test_if_true"
+  caseDir=Path(__file__).parent/"graph_execution"/"sandbox"
   # isSuccess=testCaseExecution(caseDir,"expected.yaml",None,True)
   # print(isSuccess)
   testSuitExecution(suitDir)
+  # testCaseExecution(caseDir,isDetail=True)
+

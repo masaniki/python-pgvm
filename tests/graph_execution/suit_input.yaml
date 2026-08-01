@@ -1,4 +1,7 @@
 "default":
   test: true
+  outputName: "output.yaml"
+  expectedName: "expected.yaml"
+  isDetail: true
 "sandbox":
   test: false
