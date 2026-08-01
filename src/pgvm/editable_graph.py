@@ -59,7 +59,7 @@ class EditableGraph():
     if(program is None):
       self.programLength=0
     else:
-      self.proramLength=len(program)
+      self.programLength=len(program)
 
   def loadProgramCSV(self,csvFile):
     """
@@ -82,6 +82,61 @@ class EditableGraph():
       programData.append(argList)
     self.program=programData
     self.programLength=len(programData)
+
+  def visualizeProgram(self,filename):
+    """
+    @Summ: programをgraph構造で可視化する関数。
+    """
+    graph=graphviz.Digraph()
+    graph.filename=filename
+    graph.format="svg"
+    graph.attr("graph",rankdir="LR")
+    graph.node(name="start")
+    graph.node(name="end")
+    graph.edge("start","row_0:command")
+    for i in range(self.programLength):
+      argList=self.program[i]
+      command=argList[0]
+      match command:
+        case "gn":
+          nodeLabel=f"<command> {command}|{argList[1]}|<jump1> {argList[2]}"
+          if(int(argList[2])<self.programLength):
+            graph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[2]}:head")
+          else:
+            graph.edge(tail_name=f"row_{i}:jump1",head_name="end")
+        case "ge":
+          nodeLabel=f"<command> {command}|{argList[1]}|{argList[2]}|<jump1> {argList[3]}"
+          if(int(argList[3])<self.programLength):
+            graph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[3]}:head")
+          else:
+            graph.edge(tail_name=f"row_{i}:jump1",head_name="end")
+        case "se":
+          nodeLabel=f"<command> {command}|{argList[1]}|{argList[2]}|<jump1> {argList[3]}"
+          if(int(argList[3])<self.programLength):
+            graph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[3]}:head")
+          else:
+            graph.edge(tail_name=f"row_{i}:jump1",head_name="end")
+        case "del":
+          nodeLabel=f"<command> {command}|{argList[1]}|<jump1> {argList[2]}"
+          if(int(argList[2])<self.programLength):
+            graph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[2]}:head")
+          else:
+            graph.edge(tail_name=f"row_{i}:jump1",head_name="end")
+        case "if":
+          nodeLabel=f"<command> {command}|{argList[1]}|{argList[2]}|<jump1> {argList[3]}|<jump2> {argList[4]}"
+          if(int(argList[3])<self.programLength):
+            graph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[3]}:head")
+          else:
+            graph.edge(tail_name=f"row_{i}:jump1",head_name="end")
+          if(int(argList[4])<self.programLength):
+            graph.edge(tail_name=f"row_{i}:jump2",head_name=f"row_{argList[4]}:head")
+          else:
+            graph.edge(tail_name=f"row_{i}:jump2",head_name="end")
+        case _:
+          raise RuntimeError
+      graph.node(name=f"row_{i}",label=nodeLabel, shape="record")
+    graph.render()
+
 
   def __issueNewNode(self):
     """

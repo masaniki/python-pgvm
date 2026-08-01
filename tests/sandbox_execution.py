@@ -60,18 +60,21 @@ def testCaseExecution(testDir:Path,outputName:str,expectedName:str|None=None,isD
 
 
 if(__name__=="__main__"):
-  test_gn=Path(__file__).parent/"graph_execution"/"unittest"/"graph01.yaml"
-  graphFile=Path(__file__).parent/"graph_execution"/"unittest"/"graph01.yaml"
-  programFile=Path(__file__).parent/"graph_execution"/"unittest"/"test_if01.csv"
-  testCaseExecution(graph)
+  sandboxDir=Path(__file__).parent/"graph_execution"/"sandbox"
+  graphFile=sandboxDir/"graph.yaml"
+  programFile=sandboxDir/"program.csv"
+  beforeDot=sandboxDir/"before.dot"
+  afterDot=sandboxDir/"after.dot"
+  programDot=sandboxDir/"program.dot"
   with open(graphFile,mode="r",encoding="utf-8") as f:
     graphDict=yaml.safe_load(f)
   eg01=EditableGraph(graphDict,10)
-  eg01.visualize("mygraph_before.dot")
+  eg01.visualize(beforeDot)
   eg01.loadProgramCSV(str(programFile))
-  print(eg01.program)
-  eg01.execute()
+  eg01.visualizeProgram(programDot)
+  # print(eg01.program)
+  # eg01.execute()
   # tup01=eg01.accessNode(["file","next","next","next"])
   # print(tup01)
-  eg01.visualize("mygraph_after.dot")
+  # eg01.visualize(afterDot)
 
