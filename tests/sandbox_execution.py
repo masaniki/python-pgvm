@@ -40,7 +40,7 @@ def testCaseExecution(testDir:Path,outputName:str,expectedName:str|None=None,isD
     eg01.visualize(beforeDot)
   eg01.execute()
   with open(outputFile,mode="r",encoding="utf-8") as f:
-    yaml.safe_dump(eg01.data,f)
+    yaml.safe_dump(eg01.graph,f)
   if(isDetail):
     eg01.visualize(afterDot)
   # 期待fileと比較する場合。
@@ -50,7 +50,7 @@ def testCaseExecution(testDir:Path,outputName:str,expectedName:str|None=None,isD
     expectedFile=testDir/expectedName
     with open(expectedFile,mode="r",encoding="utf-8") as f:
       expDict=yaml.safe_load(f)
-    for key,outValue in eg01.data.items():
+    for key,outValue in eg01.graph.items():
       expValue=expDict.get(key)
       if(expValue is None):
         return False

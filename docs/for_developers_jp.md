@@ -50,10 +50,10 @@ merge後は削除。
 - [x] generate edge文の追加。
 - [x] switch edge文の追加。
 - [x] delete文の追加。
-- [x] test caseの追加。
 - [x] programの可視化用の関数の追加。
-- [ ] root nodeはimport時に指定する。
-- [ ] new記号やdelete記号の削除。
+- [x] root nodeはimport時に指定する。
+- [x] new記号やdelete記号の削除。
+- [ ] test caseの追加。
 
 ## Ideas
 

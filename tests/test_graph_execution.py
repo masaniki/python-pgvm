@@ -87,7 +87,7 @@ def testCaseExecution(caseDir:Path,outputName:str="output.yaml",expectedName:str
   eg01.loadProgramCSV(programFile)
   eg01.execute()
   with open(outputFile,mode="w",encoding="utf-8") as f:
-    yaml.safe_dump(eg01.data,f)
+    yaml.safe_dump(eg01.graph,f)
   if(isDetail):
     eg01.visualize(afterDot)
   # 期待fileと比較する場合。
@@ -97,7 +97,7 @@ def testCaseExecution(caseDir:Path,outputName:str="output.yaml",expectedName:str
     expectedFile=caseDir/expectedName
     with open(expectedFile,mode="r",encoding="utf-8") as f:
       expDict=yaml.safe_load(f)
-    for key,outValue in eg01.data.items():
+    for key,outValue in eg01.graph.items():
       expValue=expDict.get(key)
       if(expValue is None):
         return False

@@ -7,27 +7,9 @@ class EditableGraph():
   @Desc:
   - node番号は非負整数である。負の値はerror用。
   """
-  ROOT_NODE=0
-  NEW_NODE=1
-  DELETE_NODE=2
-  NEW_EDGE_LABEL="new"
-  DELETE_EDGE_LABEL="delete"
   PATH_DELIMITER="/"
 
-
-  @classmethod
-  def __initializeGraph(cls):
-    """
-    @Summ: 初期状態のgraphを出力する関数。
-    """
-    initGraph={cls.ROOT_NODE:{"new":cls.NEW_NODE, "delete":cls.DELETE_NODE},
-               cls.NEW_NODE:{},
-               cls.DELETE_NODE:{}           
-    }
-    return initGraph
-
-
-  def __init__(self,data,connectingNode:int,program:list=None):
+  def __init__(self,graph,rootNode:int,program:list=None):
     """
     @Summ: constructor.
 
@@ -35,6 +17,9 @@ class EditableGraph():
       data:
         @Summ: {node番号(int):{edgeLabel(str):node番号(int)}}。
         @Type: Dict
+      rootNode:
+        @Summ: root nodeのnode番号。
+        @Type: Int
       maxNodeIdx:
         @Summ: node番号の最大値を記録する。
         @Type: Int
@@ -49,10 +34,8 @@ class EditableGraph():
         @Summ: 次に実行するprogramの行数を記録する。
         @Type: Int
     """
-    initGraph=self.__initializeGraph()
-    initGraph[self.ROOT_NODE]["file"]=connectingNode
-    initGraph|=data
-    self.data=initGraph
+    self.graph=graph
+    self.rootNode=rootNode
     self.maxNodeIdx=None
     self.program=program
     self.programCounter=0
@@ -87,13 +70,13 @@ class EditableGraph():
     """
     @Summ: programをgraph構造で可視化する関数。
     """
-    graph=graphviz.Digraph()
-    graph.filename=filename
-    graph.format="svg"
-    graph.attr("graph",rankdir="LR")
-    graph.node(name="start")
-    graph.node(name="end")
-    graph.edge("start","row_0:command")
+    digraph=graphviz.Digraph()
+    digraph.filename=filename
+    digraph.format="svg"
+    digraph.attr("graph",rankdir="LR")
+    digraph.node(name="start")
+    digraph.node(name="end")
+    digraph.edge("start","row_0:command")
     for i in range(self.programLength):
       argList=self.program[i]
       command=argList[0]
@@ -101,41 +84,41 @@ class EditableGraph():
         case "gn":
           nodeLabel=f"<command> {command}|{argList[1]}|<jump1> {argList[2]}"
           if(int(argList[2])<self.programLength):
-            graph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[2]}:head")
+            digraph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[2]}:head")
           else:
-            graph.edge(tail_name=f"row_{i}:jump1",head_name="end")
+            digraph.edge(tail_name=f"row_{i}:jump1",head_name="end")
         case "ge":
           nodeLabel=f"<command> {command}|{argList[1]}|{argList[2]}|<jump1> {argList[3]}"
           if(int(argList[3])<self.programLength):
-            graph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[3]}:head")
+            digraph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[3]}:head")
           else:
-            graph.edge(tail_name=f"row_{i}:jump1",head_name="end")
+            digraph.edge(tail_name=f"row_{i}:jump1",head_name="end")
         case "se":
           nodeLabel=f"<command> {command}|{argList[1]}|{argList[2]}|<jump1> {argList[3]}"
           if(int(argList[3])<self.programLength):
-            graph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[3]}:head")
+            digraph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[3]}:head")
           else:
-            graph.edge(tail_name=f"row_{i}:jump1",head_name="end")
+            digraph.edge(tail_name=f"row_{i}:jump1",head_name="end")
         case "del":
           nodeLabel=f"<command> {command}|{argList[1]}|<jump1> {argList[2]}"
           if(int(argList[2])<self.programLength):
-            graph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[2]}:head")
+            digraph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[2]}:head")
           else:
-            graph.edge(tail_name=f"row_{i}:jump1",head_name="end")
+            digraph.edge(tail_name=f"row_{i}:jump1",head_name="end")
         case "if":
           nodeLabel=f"<command> {command}|{argList[1]}|{argList[2]}|<jump1> {argList[3]}|<jump2> {argList[4]}"
           if(int(argList[3])<self.programLength):
-            graph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[3]}:head")
+            digraph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[3]}:head")
           else:
-            graph.edge(tail_name=f"row_{i}:jump1",head_name="end")
+            digraph.edge(tail_name=f"row_{i}:jump1",head_name="end")
           if(int(argList[4])<self.programLength):
-            graph.edge(tail_name=f"row_{i}:jump2",head_name=f"row_{argList[4]}:head")
+            digraph.edge(tail_name=f"row_{i}:jump2",head_name=f"row_{argList[4]}:head")
           else:
-            graph.edge(tail_name=f"row_{i}:jump2",head_name="end")
+            digraph.edge(tail_name=f"row_{i}:jump2",head_name="end")
         case _:
           raise RuntimeError
-      graph.node(name=f"row_{i}",label=nodeLabel, shape="record")
-    graph.render()
+      digraph.node(name=f"row_{i}",label=nodeLabel, shape="record")
+    digraph.render()
 
 
   def __issueNewNode(self):
@@ -149,26 +132,26 @@ class EditableGraph():
       @Type: Int
     """
     if(self.maxNodeIdx is None):
-      self.maxNodeIdx=max(self.data.keys())
+      self.maxNodeIdx=max(self.graph.keys())
     newNodeIdx=self.maxNodeIdx+1
     self.maxNodeIdx=newNodeIdx
-    self.data[newNodeIdx]={}
+    self.graph[newNodeIdx]={}
     return newNodeIdx
 
   def visualize(self,filename):
     """
     @Summ: graphvizで可視化する関数。
     """
-    graph=graphviz.Digraph()
-    graph.filename=filename
-    graph.format="svg"
-    graph.attr("graph",rankdir="LR")
-    for nodeIdx,edgeDict in self.data.items():
+    digraph=graphviz.Digraph()
+    digraph.filename=filename
+    digraph.format="svg"
+    digraph.attr("graph",rankdir="LR")
+    for nodeIdx,edgeDict in self.graph.items():
       # print(nodeIdx)
-      graph.node(str(nodeIdx))
+      digraph.node(str(nodeIdx))
       for edgeLabel,destNode in edgeDict.items():
-        graph.edge(tail_name=str(nodeIdx), head_name=str(destNode), label=edgeLabel)
-    graph.render()
+        digraph.edge(tail_name=str(nodeIdx), head_name=str(destNode), label=edgeLabel)
+    digraph.render()
 
   def accessNode(self,path:list):
     """
@@ -186,8 +169,8 @@ class EditableGraph():
       @Desc: 0で到達完了を表す。
       @Type: Int
     """
-    history=[self.ROOT_NODE]
-    curEdgeDict=self.data[self.ROOT_NODE]
+    history=[self.rootNode]
+    curEdgeDict=self.graph[self.rootNode]
     pathLength=len(path)
     unreached=pathLength
     for i in range(pathLength):
@@ -196,7 +179,7 @@ class EditableGraph():
       if(curNode is None):
         break
       history.append(curNode)
-      curEdgeDict=self.data[curNode]
+      curEdgeDict=self.graph[curNode]
       unreached-=1
     return history,unreached
 
@@ -260,7 +243,7 @@ class EditableGraph():
     history,unreached=self.accessNode(lastNodePath)
     if(unreached==0):
       lastNode=history[-1]
-      del self.data[lastNode][lastEdge]
+      del self.graph[lastNode][lastEdge]
     else:
       raise RuntimeError(f"line: {self.programCounter}:\n\t{path} is not accessable.")
 
@@ -281,7 +264,7 @@ class EditableGraph():
     lastEdge=edgeList[-1]
     lastNode=history[-1]
     newNode=self.__issueNewNode()
-    self.data[lastNode][lastEdge]=newNode
+    self.graph[lastNode][lastEdge]=newNode
 
   def generateEdge(self,path1,path2):
     """
@@ -309,7 +292,7 @@ class EditableGraph():
     if(unused2>0):
       raise RuntimeError(f"line: {self.programCounter}:\n\t{path2} is not accessable.")
     newEndNode=path2history[-1]
-    self.data[edgeStartNode][lastEdgeLabel]=newEndNode
+    self.graph[edgeStartNode][lastEdgeLabel]=newEndNode
 
   def switchEdge(self,path1,path2):
     """
@@ -338,17 +321,14 @@ class EditableGraph():
     if(unreached2>0):
       raise RuntimeError(f"line: {self.programCounter}:\n\t{path2} is not accessable.")
     newEndNode=path2history[-1]
-    edgeInfo=self.data[newStartNode]
+    edgeInfo=self.graph[newStartNode]
     if(newEndNode in edgeInfo.values()):
       raise RuntimeError(f"line: {self.programCounter}:\n\t Edge endpoint is duplicated.")    #既存のedgeの終端が被る。
-    self.data[newStartNode][lastEdge]=newEndNode
+    self.graph[newStartNode][lastEdge]=newEndNode
 
   def executeIf(self,path1,path2):
     """
     @Summ: if文を実行する関数。
-
-    @Desc:
-    - path1==未到達度1∧path2==DELETE_NODEの時、edgeが存在しない時にTrueを出力する。
 
     @Args:
       path1:
@@ -363,13 +343,6 @@ class EditableGraph():
     """
     path1EdgeList=path1.split(self.PATH_DELIMITER)
     path1History,path1unreached=self.accessNode(path1EdgeList)
-    if(path2==self.DELETE_EDGE_LABEL):
-      if(path1unreached==0):
-        return False
-      elif(path1unreached==1):
-        return True
-      else:
-        raise RuntimeError(f"line {self.programCounter}:\n\t{path2} is not accessable.")
     path2EdgeList=path2.split(self.PATH_DELIMITER)
     path2History,path2unreached=self.accessNode(path2EdgeList)
     if(path1unreached!=0):
