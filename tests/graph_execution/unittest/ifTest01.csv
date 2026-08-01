@@ -1,6 +1,0 @@
-gn,register,1
-gn,register/next,2
-ge,register/value,file/value,3
-if,file/value,register/value,4,5
-gn,register/next/next,100
-gn,file/value/next,100

@@ -38,8 +38,9 @@ def testCaseExecution(testDir:Path,outputName:str,expectedName:str|None=None,isD
   eg01=EditableGraph(graphDict,10)
   if(isDetail):
     eg01.visualize(beforeDot)
+  eg01.loadProgramCSV(programFile)
   eg01.execute()
-  with open(outputFile,mode="r",encoding="utf-8") as f:
+  with open(outputFile,mode="w",encoding="utf-8") as f:
     yaml.safe_dump(eg01.data,f)
   if(isDetail):
     eg01.visualize(afterDot)
@@ -58,20 +59,7 @@ def testCaseExecution(testDir:Path,outputName:str,expectedName:str|None=None,isD
         return False
     return True
 
-
 if(__name__=="__main__"):
-  test_gn=Path(__file__).parent/"graph_execution"/"unittest"/"graph01.yaml"
-  graphFile=Path(__file__).parent/"graph_execution"/"unittest"/"graph01.yaml"
-  programFile=Path(__file__).parent/"graph_execution"/"unittest"/"test_if01.csv"
-  testCaseExecution(graph)
-  with open(graphFile,mode="r",encoding="utf-8") as f:
-    graphDict=yaml.safe_load(f)
-  eg01=EditableGraph(graphDict,10)
-  eg01.visualize("mygraph_before.dot")
-  eg01.loadProgramCSV(str(programFile))
-  print(eg01.program)
-  eg01.execute()
-  # tup01=eg01.accessNode(["file","next","next","next"])
-  # print(tup01)
-  eg01.visualize("mygraph_after.dot")
-
+  test_gn=Path(__file__).parent/"graph_execution"/"test_gn"
+  isSuccess=testCaseExecution(test_gn,"output.yaml","expected.yaml",True)
+  print(isSuccess)
