@@ -151,9 +151,7 @@ class EditableGraph():
     @Summ: programを実行する関数。
     """
     self.programCounter=0
-    print(self.programCounter)
     while(True):
-      print(self.programCounter)
       if(self.programLength<=self.programCounter):
         break
       argList=self.program[self.programCounter]

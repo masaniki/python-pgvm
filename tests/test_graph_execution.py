@@ -60,6 +60,6 @@ def testCaseExecution(testDir:Path,outputName:str,expectedName:str|None=None,isD
     return True
 
 if(__name__=="__main__"):
-  test_gn=Path(__file__).parent/"graph_execution"/"test_gn"
-  isSuccess=testCaseExecution(test_gn,"output.yaml","expected.yaml",True)
+  caseDir=Path(__file__).parent/"graph_execution"/"test_if_true"
+  isSuccess=testCaseExecution(caseDir,"expected.yaml",None,True)
   print(isSuccess)
