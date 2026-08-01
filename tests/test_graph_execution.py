@@ -102,9 +102,9 @@ def testCaseExecution(caseDir:Path,outputName:str="output.yaml",expectedName:str
 
 if(__name__=="__main__"):
   suitDir=Path(__file__).parent/"graph_execution"
-  caseDir=Path(__file__).parent/"graph_execution"/"sandbox"
+  caseDir=Path(__file__).parent/"graph_execution"/"invalid_command"
   # isSuccess=testCaseExecution(caseDir,"expected.yaml",None,True)
   # print(isSuccess)
-  testSuitExecution(suitDir)
-  # testCaseExecution(caseDir,isDetail=True)
+  # testSuitExecution(suitDir)
+  testCaseExecution(caseDir,isDetail=True)
 
