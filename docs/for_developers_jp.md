@@ -51,6 +51,8 @@ merge後は削除。
 - feat/*をdevelopにmerge.
 - PyPIへupload.
 - developをmasterにmerge.
+- tagを書いて、remoteにpushする。
+- gitHubでrelease noteを書く。
 
 ## 前回からの変更点
 
