@@ -66,5 +66,9 @@ merge後は削除。
 - 未達度が大きいpathでも一気に生成できるようにする？
 - Turing machineとの比較。
 - encoding関数とdecoding関数の実装。
+- nodeのgarbage collection。
+- node番号の重複回避の仕組み。
+
+  graph fileの時は、nodeは文字列によって表現されるが、それをimportする時に、nodeに識別子となる番号を付与する。
 
 # Others
