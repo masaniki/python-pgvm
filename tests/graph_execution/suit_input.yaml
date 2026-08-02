@@ -5,3 +5,5 @@
   isDetail: true
 "sandbox":
   test: false
+"invalid_command":
+  test: false

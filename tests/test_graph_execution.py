@@ -81,7 +81,8 @@ def testCaseExecution(caseDir:Path,outputName:str="output.yaml",expectedName:str
   outputFile=caseDir/outputName
   with open(graphFile,mode="r",encoding="utf-8") as f:
     graphDict=yaml.safe_load(f)
-  eg01=EditableGraph(graphDict,10)
+  eg01=EditableGraph()
+  eg01.importGraph("file",graphDict,10)
   if(isDetail):
     eg01.visualize(beforeDot)
   eg01.loadProgramCSV(programFile)
@@ -102,9 +103,9 @@ def testCaseExecution(caseDir:Path,outputName:str="output.yaml",expectedName:str
 
 if(__name__=="__main__"):
   suitDir=Path(__file__).parent/"graph_execution"
-  caseDir=Path(__file__).parent/"graph_execution"/"invalid_command"
+  caseDir=Path(__file__).parent/"graph_execution"/"sandbox"
   # isSuccess=testCaseExecution(caseDir,"expected.yaml",None,True)
   # print(isSuccess)
-  # testSuitExecution(suitDir)
-  testCaseExecution(caseDir,isDetail=True)
+  testSuitExecution(suitDir)
+  # testCaseExecution(caseDir,isDetail=True)
 

@@ -1,3 +1,3 @@
 gn,register,1
-gn,value/next,2
-gn,next/next/value,100
+gn,file/value/next,2
+gn,file/next/next/value,100

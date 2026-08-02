@@ -1,6 +1,8 @@
+0:
+  file: 10
+  register: 15
 10:
   next: 11
-  register: 15
   value: 12
 11:
   next: 13

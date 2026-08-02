@@ -56,8 +56,8 @@ merge後は削除。
 
 ## 前回からの変更点
 
-- [ ] root nodeの復活。
-- [ ] import関数を作る。
+- [x] root nodeの復活。
+- [x] import関数を作る。
 
 ## Ideas
 
@@ -65,5 +65,6 @@ merge後は削除。
 
 - 未達度が大きいpathでも一気に生成できるようにする？
 - Turing machineとの比較。
+- encoding関数とdecoding関数の実装。
 
 # Others
