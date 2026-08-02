@@ -9,20 +9,29 @@ class EditableGraph():
 
   @Desc:
   - node番号は非負整数である。負の値はerror用。
+
+  @ClsVars:
+    ROOT_NODE:
+      @Summ: root nodeの番号。
+      @Type: Int
+      @Default: 0
+    PATH_DELIMITER:
+      @Summ: pathの区切り文字。
+      @Type: Str
+      @Default: "/"
   """
+  ROOT_NODE=0
   PATH_DELIMITER="/"
 
-  def __init__(self,graph,rootNode:int,program:list=None):
+  def __init__(self):
     """
     @Summ: constructor.
 
     @InsVars:
-      data:
-        @Summ: {node番号(int):{edgeLabel(str):node番号(int)}}。
+      graph:
+        @Summ: PGVMが扱うgraph data.
+        @SemType: {node番号(int):{edgeLabel(str):node番号(int)}}。
         @Type: Dict
-      rootNode:
-        @Summ: root nodeのnode番号。
-        @Type: Int
       maxNodeIdx:
         @Summ: node番号の最大値を記録する。
         @Type: Int
@@ -37,15 +46,37 @@ class EditableGraph():
         @Summ: 次に実行するprogramの行数を記録する。
         @Type: Int
     """
-    self.graph=graph
-    self.rootNode=rootNode
+    self.graph={self.ROOT_NODE:{}}
     self.maxNodeIdx=None
-    self.program=program
+    self.program=[]
     self.programCounter=0
-    if(program is None):
-      self.programLength=0
-    else:
-      self.programLength=len(program)
+    self.programLength=0
+
+  def importGraph(self,path:str,graph:dict,connectingNode:int):
+    """
+    @Summ: graph dataをimportする関数。
+
+    @Args:
+      path:
+        @Summ: 新しいgraphを繋げる場所を指定する。
+        @Desc: 未到達度1である必要がある。
+        @Type: Str
+      graph:
+        @Summ: graph構造のdata.
+        @Type: Dict
+      connectingNode:
+        @Summ: pathに繋げるnode番号を指定する。
+        @Type: Int
+    """
+    edgeList=path.split(self.PATH_DELIMITER)
+    history,unreached=self.accessNode(edgeList)
+    if(unreached!=1):
+      raise RuntimeError(f"{path} is invalid.")
+    self.graph|=graph    #graphの合体。
+    lastEdge=edgeList[-1]
+    lastNode=history[-1]
+    self.graph[lastNode][lastEdge]=connectingNode
+
 
   def loadProgramCSV(self,csvFile):
     """
@@ -172,8 +203,8 @@ class EditableGraph():
       @Desc: 0で到達完了を表す。
       @Type: Int
     """
-    history=[self.rootNode]
-    curEdgeDict=self.graph[self.rootNode]
+    history=[self.ROOT_NODE]
+    curEdgeDict=self.graph[self.ROOT_NODE]
     pathLength=len(path)
     unreached=pathLength
     for i in range(pathLength):
