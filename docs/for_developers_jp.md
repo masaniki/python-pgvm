@@ -56,22 +56,13 @@ merge後は削除。
 
 ## 前回からの変更点
 
-- [x] generate node文の追加。
-- [x] generate edge文の追加。
-- [x] switch edge文の追加。
-- [x] delete文の追加。
-- [x] programの可視化用の関数の追加。
-- [x] root nodeはimport時に指定する。
-- [x] new記号やdelete記号の削除。
-- [x] test caseの追加。
-- [x] PGVMRuntimeErrorの追加。
+- [ ] root nodeの復活。
+- [ ] import関数を作る。
 
 ## Ideas
 
 次、実装する可能性があるideaを記述する。
 
-- 引数を複数にできるようにする。
-- rootに複数のfileを接続する。
 - 未達度が大きいpathでも一気に生成できるようにする？
 - Turing machineとの比較。
 
