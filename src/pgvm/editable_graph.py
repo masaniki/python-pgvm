@@ -110,48 +110,48 @@ class EditableGraph():
     digraph.attr("graph",rankdir="LR")
     digraph.node(name="start")
     digraph.node(name="end")
-    digraph.edge("start","row_0:command")
+    digraph.edge("start","0:head")
     for i in range(self.programLength):
       argList=self.program[i]
       command=argList[0]
       match command:
         case "gn":
-          nodeLabel=f"<command> {command}|{argList[1]}|<jump1> {argList[2]}"
+          nodeLabel=f"<head> line_{i}|{command}|{argList[1]}|<jump1> {argList[2]}"
           if(int(argList[2])<self.programLength):
-            digraph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[2]}:command")
+            digraph.edge(tail_name=f"{i}:jump1",head_name=f"{argList[2]}:head")
           else:
-            digraph.edge(tail_name=f"row_{i}:jump1",head_name="end")
+            digraph.edge(tail_name=f"{i}:jump1",head_name="end")
         case "ge":
-          nodeLabel=f"<command> {command}|{argList[1]}|{argList[2]}|<jump1> {argList[3]}"
+          nodeLabel=f"<head> line_{i}|{command}|{argList[1]}|{argList[2]}|<jump1> {argList[3]}"
           if(int(argList[3])<self.programLength):
-            digraph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[3]}:command")
+            digraph.edge(tail_name=f"{i}:jump1",head_name=f"{argList[3]}:head")
           else:
-            digraph.edge(tail_name=f"row_{i}:jump1",head_name="end")
+            digraph.edge(tail_name=f"{i}:jump1",head_name="end")
         case "se":
-          nodeLabel=f"<command> {command}|{argList[1]}|{argList[2]}|<jump1> {argList[3]}"
+          nodeLabel=f"<head> line_{i}|{command}|{argList[1]}|{argList[2]}|<jump1> {argList[3]}"
           if(int(argList[3])<self.programLength):
-            digraph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[3]}:command")
+            digraph.edge(tail_name=f"{i}:jump1",head_name=f"{argList[3]}:head")
           else:
-            digraph.edge(tail_name=f"row_{i}:jump1",head_name="end")
+            digraph.edge(tail_name=f"{i}:jump1",head_name="end")
         case "del":
-          nodeLabel=f"<command> {command}|{argList[1]}|<jump1> {argList[2]}"
+          nodeLabel=f"<head> line_{i}|{command}|{argList[1]}|<jump1> {argList[2]}"
           if(int(argList[2])<self.programLength):
-            digraph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[2]}:command")
+            digraph.edge(tail_name=f"{i}:jump1",head_name=f"{argList[2]}:head")
           else:
-            digraph.edge(tail_name=f"row_{i}:jump1",head_name="end")
+            digraph.edge(tail_name=f"{i}:jump1",head_name="end")
         case "if":
-          nodeLabel=f"<command> {command}|{argList[1]}|{argList[2]}|<jump1> {argList[3]}|<jump2> {argList[4]}"
+          nodeLabel=f"<head> line_{i}|{command}|{argList[1]}|{argList[2]}|<jump1> {argList[3]}|<jump2> {argList[4]}"
           if(int(argList[3])<self.programLength):
-            digraph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[3]}:command")
+            digraph.edge(tail_name=f"{i}:jump1",head_name=f"{argList[3]}:head")
           else:
-            digraph.edge(tail_name=f"row_{i}:jump1",head_name="end")
+            digraph.edge(tail_name=f"{i}:jump1",head_name="end")
           if(int(argList[4])<self.programLength):
-            digraph.edge(tail_name=f"row_{i}:jump2",head_name=f"row_{argList[4]}:command")
+            digraph.edge(tail_name=f"{i}:jump2",head_name=f"{argList[4]}:head")
           else:
-            digraph.edge(tail_name=f"row_{i}:jump2",head_name="end")
+            digraph.edge(tail_name=f"{i}:jump2",head_name="end")
         case _:
           raise PGVMSyntaxError(self.programCounter, f"{command} is invalid command.")
-      digraph.node(name=f"row_{i}",label=nodeLabel, shape="record")
+      digraph.node(name=f"{i}",label=nodeLabel, shape="record")
     digraph.render()
 
 
@@ -174,7 +174,7 @@ class EditableGraph():
 
   def visualize(self,filename):
     """
-    @Summ: graphvizで可視化する関数。
+    @Summ: self.graphをgraphvizで可視化する関数。
     """
     digraph=graphviz.Digraph()
     digraph.filename=filename

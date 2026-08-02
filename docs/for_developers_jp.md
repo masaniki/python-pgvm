@@ -56,8 +56,8 @@ merge後は削除。
 
 ## 前回からの変更点
 
-- [ ] if文の仕様変更。
-- [ ] visualizeProgram関数のdebug.
+- [x] pathが存在しない時の、if文の処理の実装。(false側へ分岐する)
+- [x] EditableGraph.visualizeProgram()に、行番号を追加した。
 
 ## Ideas
 
