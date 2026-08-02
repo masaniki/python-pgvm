@@ -142,13 +142,13 @@ if文は、2つのnodeを比較して、その結果に応じて次の命令の�
 
   比較するnodeを指定するためのpathを記述します。
 
+  nodeが参照できない場合はfalse側へ分岐します。
+
 - `<path2>`
 
   比較するnodeを指定するためのpathを記述します。
 
-  - 特殊なpath `delete`
-  
-    `<path2>`に`delete`を指定すると、`<path1>`が存在しない時に`<row_index1>`へjumpし(trueと同じ挙動)、存在する時に`<row_index2>`へjumpします。
+  nodeが参照できない場合はfalse側へ分岐します。
 
 - `<row_index1>`
 

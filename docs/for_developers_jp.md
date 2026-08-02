@@ -56,8 +56,8 @@ merge後は削除。
 
 ## 前回からの変更点
 
-- [x] root nodeの復活。
-- [x] import関数を作る。
+- [ ] if文の仕様変更。
+- [ ] visualizeProgram関数のdebug.
 
 ## Ideas
 

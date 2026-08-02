@@ -106,6 +106,6 @@ if(__name__=="__main__"):
   caseDir=Path(__file__).parent/"graph_execution"/"sandbox"
   # isSuccess=testCaseExecution(caseDir,"expected.yaml",None,True)
   # print(isSuccess)
-  testSuitExecution(suitDir)
-  # testCaseExecution(caseDir,isDetail=True)
+  # testSuitExecution(suitDir)
+  testCaseExecution(caseDir,isDetail=True)
 

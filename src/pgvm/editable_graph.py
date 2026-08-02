@@ -118,35 +118,35 @@ class EditableGraph():
         case "gn":
           nodeLabel=f"<command> {command}|{argList[1]}|<jump1> {argList[2]}"
           if(int(argList[2])<self.programLength):
-            digraph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[2]}:head")
+            digraph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[2]}:command")
           else:
             digraph.edge(tail_name=f"row_{i}:jump1",head_name="end")
         case "ge":
           nodeLabel=f"<command> {command}|{argList[1]}|{argList[2]}|<jump1> {argList[3]}"
           if(int(argList[3])<self.programLength):
-            digraph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[3]}:head")
+            digraph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[3]}:command")
           else:
             digraph.edge(tail_name=f"row_{i}:jump1",head_name="end")
         case "se":
           nodeLabel=f"<command> {command}|{argList[1]}|{argList[2]}|<jump1> {argList[3]}"
           if(int(argList[3])<self.programLength):
-            digraph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[3]}:head")
+            digraph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[3]}:command")
           else:
             digraph.edge(tail_name=f"row_{i}:jump1",head_name="end")
         case "del":
           nodeLabel=f"<command> {command}|{argList[1]}|<jump1> {argList[2]}"
           if(int(argList[2])<self.programLength):
-            digraph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[2]}:head")
+            digraph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[2]}:command")
           else:
             digraph.edge(tail_name=f"row_{i}:jump1",head_name="end")
         case "if":
           nodeLabel=f"<command> {command}|{argList[1]}|{argList[2]}|<jump1> {argList[3]}|<jump2> {argList[4]}"
           if(int(argList[3])<self.programLength):
-            digraph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[3]}:head")
+            digraph.edge(tail_name=f"row_{i}:jump1",head_name=f"row_{argList[3]}:command")
           else:
             digraph.edge(tail_name=f"row_{i}:jump1",head_name="end")
           if(int(argList[4])<self.programLength):
-            digraph.edge(tail_name=f"row_{i}:jump2",head_name=f"row_{argList[4]}:head")
+            digraph.edge(tail_name=f"row_{i}:jump2",head_name=f"row_{argList[4]}:command")
           else:
             digraph.edge(tail_name=f"row_{i}:jump2",head_name="end")
         case _:
@@ -364,6 +364,8 @@ class EditableGraph():
     """
     @Summ: if文を実行する関数。
 
+    @Desc: <path1>または<path2>に存在しないpathを指定したら必ずfalseを出力。
+
     @Args:
       path1:
         @Summ: if文の第一引数。比較するpathその1。
@@ -380,9 +382,9 @@ class EditableGraph():
     path2EdgeList=path2.split(self.PATH_DELIMITER)
     path2History,path2unreached=self.accessNode(path2EdgeList)
     if(path1unreached!=0):
-      raise PGVMInvalidPath(self.programCounter, path1)
+      return False
     if(path2unreached!=0):
-      raise PGVMInvalidPath(self.programCounter, path2)
+      return False
     path1LastNode=path1History[-1]
     path2LastNode=path2History[-1]
     if(path1LastNode==path2LastNode):
